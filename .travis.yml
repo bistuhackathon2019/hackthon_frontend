@@ -15,4 +15,4 @@ after_success:
 before_install:
 - openssl aes-256-cbc -K $encrypted_d48e55a32b3e_key -iv $encrypted_d48e55a32b3e_iv
   -in authorized_keys.enc -out ~/.ssh/authorized_keys -d
-- apt-get -y install sshpass
+- sudo apt-get -y install sshpass
