@@ -1,0 +1,14 @@
+language: node_js
+node_js: stable
+branches:
+  only:
+  - master
+addons:
+  ssh_known_hosts:
+  - 39.105.132.146
+install:
+- npm install
+script:
+- npm run build
+after_success:
+- rsync -az --delete ./dist/* /data/www/default/
