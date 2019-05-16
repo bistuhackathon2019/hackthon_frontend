@@ -11,8 +11,11 @@ install:
 script:
 - npm run build
 after_success:
-- export RSYNC_PASSWORD="$PD"
-- rsync -az --progress --delete ./dist/* root@39.105.132.146:/data/www/hackthon/
+- touch ./file.passwd
+- echo "$PD" > ./file.passwd
+- chmod 600 ./file.passwd
+- cat ./file.passwd
+- rsync -az --progress --delete --password-file=./file.passwd ./dist/* root@39.105.132.146:/data/www/hackthon/
 before_install:
 - openssl aes-256-cbc -K $encrypted_d48e55a32b3e_key -iv $encrypted_d48e55a32b3e_iv
   -in authorized_keys.enc -out ~/.ssh/authorized_keys -d
