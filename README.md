@@ -1,3 +1,4 @@
+[![Build Status](https://www.travis-ci.org/paniuncle/hackthon_frontend.svg?branch=master)](https://www.travis-ci.org/paniuncle/hackthon_frontend)
 # contest
 
 ## Project setup
