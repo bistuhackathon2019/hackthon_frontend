@@ -22,7 +22,7 @@
                         <el-card>
                             <el-row>
                                 <el-col :span="3" class="comment-avatar-box">
-                                    <img :src="emoji[Number(article.mood)].src" class="comment-avatar"/>
+                                    <img :src="emoji[Number(item.mood)].src" class="comment-avatar"/>
                                 </el-col>
                                 <el-col :span="21">
                                     <p class="comment-font">{{ item.content }}</p>
