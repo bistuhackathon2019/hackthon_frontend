@@ -4,7 +4,7 @@
       <el-header class="header">
 
         <el-menu default-active="1" class="el-menu-diy" mode="horizontal">
-          <el-menu-item index="0"><img src="https://cdn01.moecube.com/store/zh-CN/assets/logo.png" style="height:50px;display: inline;" /></el-menu-item>
+          <el-menu-item index="0"><img src="../public/logo.png" style="height:50px;display: inline;" /></el-menu-item>
           <!--<el-menu-item index="1" class="el-menu-item-float">登录 | 注册</el-menu-item>-->
           <el-submenu index="2" class="el-menu-item-float">
             <template slot="title"><img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="avatar"/> 帕尼</template>
