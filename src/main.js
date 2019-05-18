@@ -6,9 +6,10 @@ import './plugins/element.js'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-import HelloWord from './components/HelloWorld'
 import Login from './components/Login'
+import Article from './components/Article'
 import Home from './components/Home'
+
 
 
 
@@ -18,9 +19,9 @@ Vue.use(VueRouter);
 Vue.use(VueAxios,axios);
 const routers = new VueRouter({
   routes: [
-    { path: '/', component: HelloWord},
+    { path: '/', component: Home},
     { path: '/login', component: Login},
-    { path: '/home', component: Home}
+    { path: '/article', component: Article},
   ]
 });
 
