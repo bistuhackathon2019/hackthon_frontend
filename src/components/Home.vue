@@ -2,7 +2,7 @@
     <div class="container">
         <el-card class="box-card">
                 <el-row>
-                    <el-col :span="3" v-for="(item,index) in emoji" v-bind:key="index">
+                    <el-col :xl="3" :lg="3" :md="3" :sm="12" :xs="14" v-for="(item,index) in emoji" v-bind:key="index">
                     <span @click="changeMood(index)">
                         <el-image :class="item.selected" :src="item.src" :fit="fit"></el-image>
                     </span>
@@ -12,7 +12,7 @@
         </el-card>
         <div class="container-box">
             <el-row v-for="(item, index) in listData" v-bind:key="index" class="cards">
-                    <el-col :span="3" class="avatar-box">
+                    <el-col :xl="3" :lg="3" :md="3" :sm="12" :xs="14" class="avatar-box">
                         <img :src="item.mood" class="avatar"/>
                         <p class="time"> {{item.sendTime}}</p>
                     </el-col>
@@ -25,19 +25,19 @@
                         </div>
 
                     </el-col>
-                    <el-button style="position: absolute; bottom:20px;right:20px;" @click="goTo(item.postId)" type="primary">评论</el-button>
+                    <el-button style="position: absolute; bottom:20px;right:20px;" @click="goTo(item.postId)" type="primary">Comment</el-button>
 
             </el-row>
 
-            <el-dialog title="发布帖子" :visible.sync="postBoxStatus" width="80%" :before-close="postBoxCancle">
+            <el-dialog title="Send a topic" :visible.sync="postBoxStatus" width="80%" :before-close="postBoxCancle">
                 <el-form :model="ruleForm" :rules="rules">
-                    <el-form-item label="文章内容" prop="content">
+                    <el-form-item label="The Content" prop="content">
                         <el-input type="textarea" v-model="ruleForm.content" autocomplete="off" :autosize="{ minRows: 8, maxRows: 10}"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="postBoxCancle">取 消</el-button>
-                <el-button type="primary" @click="postArticle">确 定</el-button>
+                <el-button @click="postBoxCancle">Cancel</el-button>
+                <el-button type="primary" @click="postArticle">Submit</el-button>
             </span>
             </el-dialog>
             <div class="post-button-box">
@@ -72,8 +72,8 @@
                 },
                 rules:{
                     content : [
-                        { required: true, message: '请您输入内容', trigger: 'blur' },
-                        { min: 8, max: 2000, message: '至少需要8个字，最多不超过2000个字', trigger: 'blur' }
+                        { required: true, message: 'Please your input some content in filed.', trigger: 'blur' },
+                        { min: 8, max: 2000, message: 'length is 8 to 1000', trigger: 'blur' }
                     ]
                 },
                 fit: 'fit',
@@ -93,7 +93,7 @@
             postBoxCancle: function(){
                 this.postBoxStatus = false;
                 this.$message({
-                    message: '您已经取消了发帖',
+                    message: 'Cancel Post.',
                     type: 'warning'
                 });
             },
@@ -109,7 +109,7 @@
                     "&mood=" + (mood + 1) + "&sessionKey=" + this.$cookies.get("sessionKey")
                 ).then(function(){
                     that.$notify.success({
-                        title: '心情修改成功',
+                        title: 'The Mood is change!',
                         message: "^_^"
                     });
                 }).catch(function(error){
@@ -173,8 +173,8 @@
                     window.console.log(res);
                     that.postBoxStatus = false;
                     that.$notify.success({
-                        message: '即将重新加载您的数据！',
-                        title: '发帖成功'
+                        message: 'Refreshing',
+                        title: 'Send Success'
                     });
                     that.getList(that.page)
 

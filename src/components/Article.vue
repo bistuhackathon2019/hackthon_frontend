@@ -2,7 +2,7 @@
     <div class="container">
         <div class="post-container">
             <div class="post-avatar-box">
-                <img :src="emoji[article.mood-1].src" class="post-avatar"/>
+                <img :src="emoji[Number(article.mood)].src" class="post-avatar"/>
             </div>
             <div class="post-time">
                 <p>{{article.sendTime}}</p>
@@ -11,86 +11,26 @@
                 <p class="content-font">
                     {{article.content}}
                 </p>
+                <el-button style="position: absolute; bottom:20px;right:10px;" @click="openReplyBox" type="primary">Comment</el-button>
             </div>
+
         </div>
         <div class="comment-box">
             <div class="block">
                 <el-timeline class="comment-item">
-                    <el-timeline-item timestamp="#1 2018/4/12" placement="top" color="#0bbd87">
+                    <el-timeline-item v-for="(item, index) in comment" v-bind:key="index" :timestamp="item.sendTime" placement="top" color="#0bbd87" >
                         <el-card>
                             <el-row>
                                 <el-col :span="3" class="comment-avatar-box">
-                                    <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="comment-avatar"/>
+                                    <img :src="emoji[Number(article.mood)].src" class="comment-avatar"/>
                                 </el-col>
                                 <el-col :span="21">
-                                    <p class="comment-font">我觉得这个评论非常有意思，因此我很喜欢啊！</p>
+                                    <p class="comment-font">{{ item.content }}</p>
                                 </el-col>
                             </el-row>
                             <div class="comment-button">
-                                <el-link :underline="false">回复</el-link>
+                                <!--<el-link :underline="false">回复</el-link>-->
                             </div>
-                        </el-card>
-                    </el-timeline-item>
-                    <el-timeline-item timestamp="#2 2018/4/3" placement="top" color="#0bbd87">
-                        <el-card>
-                            <el-row>
-                                <el-col :span="3" class="comment-avatar-box">
-                                    <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="comment-avatar"/>
-                                </el-col>
-                                <el-col :span="21">
-                                    <p class="comment-font">我觉得这个评论非常有意思，因此我很喜欢啊！</p>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-timeline-item>
-                    <el-timeline-item timestamp="2018/4/2" placement="top" color="#0bbd87">
-                        <el-card>
-                            <el-row>
-                                <el-col :span="3" class="comment-avatar-box">
-                                    <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="comment-avatar"/>
-                                </el-col>
-                                <el-col :span="21">
-                                    <p class="comment-font">我觉得这个评论非常有意思，因此我很喜欢啊！</p>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-timeline-item>
-                </el-timeline>
-                <el-timeline class="comment-item">
-                    <el-timeline-item timestamp="#1 2018/4/12" placement="top" color="#000">
-                        <el-card>
-                            <el-row>
-                                <el-col :span="3" class="comment-avatar-box">
-                                    <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="comment-avatar"/>
-                                </el-col>
-                                <el-col :span="21">
-                                    <p class="comment-font">我觉得这个评论非常有意思，因此我很喜欢啊！</p>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-timeline-item>
-                    <el-timeline-item timestamp="#2 2018/4/3" placement="top" color="#000">
-                        <el-card>
-                            <el-row>
-                                <el-col :span="3" class="comment-avatar-box">
-                                    <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="comment-avatar"/>
-                                </el-col>
-                                <el-col :span="21">
-                                    <p class="comment-font">我觉得这个评论非常有意思，因此我很喜欢啊！</p>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-timeline-item>
-                    <el-timeline-item timestamp="2018/4/2" placement="top" color="#000">
-                        <el-card>
-                            <el-row>
-                                <el-col :span="3" class="comment-avatar-box">
-                                    <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="comment-avatar"/>
-                                </el-col>
-                                <el-col :span="21">
-                                    <p class="comment-font">我觉得这个评论非常有意思，因此我很喜欢啊！</p>
-                                </el-col>
-                            </el-row>
                         </el-card>
                     </el-timeline-item>
                 </el-timeline>
@@ -106,6 +46,10 @@
             return {
                 article: null,
                 comment: [],
+                ruleForm: [{
+                    comment: ''
+                }
+                ],
                 emoji: [{'src':'http://cdn01-app.smartgslb.com/1.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/2.png', 'selected': 'emoji'},
                     {'src':'http://cdn01-app.smartgslb.com/3.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/4.png', 'selected': 'emoji'},
                     {'src':'http://cdn01-app.smartgslb.com/5.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/6.png', 'selected': 'emoji'},
@@ -120,20 +64,19 @@
         },
         methods: {
             openReplyBox: function(){
-                this.$prompt('请输入邮箱', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-                    inputErrorMessage: '邮箱格式不正确'
+                const that = this;
+                this.$prompt('Your comment', 'Tips', {
+                    confirmButtonText: 'Send',
+                    cancelButtonText: 'Cancel'
                 }).then(({ value }) => {
-                    this.$message({
-                        type: 'success',
-                        message: '你的邮箱是: ' + value
-                    });
+                    that.sendComment(value)
+                    this.$message.success({
+                        message:'Send Success'
+                    })
                 }).catch(() => {
                     this.$message({
                         type: 'info',
-                        message: '取消输入'
+                        message: 'You Cancel Comment'
                     });
                 });
             },
@@ -143,11 +86,31 @@
                     that.article = res.data;
                     window.console.log(res)
                 })
+            },
+            getComment: function(){
+                const that = this;
+                this.axios.get('http://39.105.132.146:8080/comment/findByPostId/' + this.$cookies.get('nowartid') ).then(function(res){
+                    window.console.log(res.data)
+                    that.comment = res.data;
+                })
+            },
+            sendComment: function(comment){
+                const that = this;
+                this.axios.get('http://39.105.132.146:8080/comment/add', {params:{
+                    postId: that.$cookies.get("nowartid"),
+                        userId: that.$cookies.get("userid"),
+                        mood: that.$cookies.get("mood"),
+                        content: comment
+                    }}).then(function(){
+                        that.getComment();
+                })
             }
         },
         created: function(){
             window.console.log(this.$cookies.get('nowartid'));
             this.getArticle(this.$cookies.get('nowartid'));
+            this.getComment();
+
         }
     }
 </script>
@@ -175,6 +138,7 @@
         border-radius: 50%;
     }
     .content{
+        position: relative;
         width: 90%;
         margin: 0 auto;
         padding-bottom:10px;

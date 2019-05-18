@@ -4,12 +4,12 @@
             <div class="login-input-group">
                 <el-form :model="ruleForm" :rules="rules">
                     <el-form-item prop="username">
-                        <el-input v-model="ruleForm.username" v-on:focus="openEys" v-on:change="checkUser" placeholder="手机号" class="login-input-box"></el-input>
+                        <el-input v-model="ruleForm.username" v-on:focus="openEys" v-on:change="checkUser" placeholder="Phone Num" class="login-input-box"></el-input>
                     </el-form-item>
-                    <!--
+
                     <el-form-item prop="password">
-                        <el-input type="password" v-model="ruleForm.password" v-on:focus="closeEys" v-on:blur="openEys" placeholder="密码" class="login-input-box" show-password></el-input>
-                    </el-form-item>-->
+                        <el-input type="password" v-model="ruleForm.password" v-on:focus="closeEys" v-on:blur="openEys" placeholder="Password" class="login-input-box" show-password></el-input>
+                    </el-form-item>
                     <el-button type="primary" class="login-button" @click="signOn" :loading="disableButton">{{buttonInfo}}</el-button>
                 </el-form>
 
@@ -34,15 +34,15 @@
                 },
                 rules:{
                     username : [
-                        { required: true, message: '请输入用户名或邮箱', trigger: 'blur' },
-                        { min: 3, max: 22, message: '长度在 11 到 22 个字符', trigger: 'blur' }
+                        { required: true, message: 'Please input Phone Num and password', trigger: 'blur' },
+                        { min: 11, max: 22, message: 'length 11 to 22.', trigger: 'blur' }
                     ],
                     password : [
-                        { required: true, message: '请输入密码', trigger: 'blur' },
-                        { min: 8, max: 22, message: '长度在 8 到 22 个字符', trigger: 'blur' }
+                        { required: true, message: 'Please input password', trigger: 'blur' },
+                        { min: 8, max: 22, message: 'length 8 to 22.', trigger: 'blur' }
                     ]
                 },
-                buttonInfo: '登录 | 注册'
+                buttonInfo: 'Sign in | Sign up'
             }
         },
         methods:{
@@ -58,10 +58,10 @@
                     this.axios.get('http://39.105.132.146:8080/user/check/' + this.ruleForm.username)
                         .then(function(res){
                             if(res.data.isExist === 'false'){
-                                that.buttonInfo = '注册';
+                                that.buttonInfo = 'Sign up';
                             }else{
-                                that.buttonInfo = '登录';
-                                that.$message(' ^_^ 主人欢迎回来～');
+                                that.buttonInfo = 'Sign in';
+                                that.$message(' ^_^ Master,Welcome back to home!');
                             }
                         })
                 }
@@ -79,8 +79,8 @@
 
                         if(res.data.loginState === "true"){
                             that.$notify({
-                                title: '登录成功',
-                                message: '即将在3秒内为您跳转到上次页面',
+                                title: 'Sign in Success',
+                                message: 'Will back to Home Page.',
                                 type: 'success'
                             });
                             // 这里存在问题
@@ -94,8 +94,8 @@
                             that.loading = false;
                             that.disableButton = true;
                             that.$notify.error({
-                                title: '登录失败',
-                                message: '错误为' + res.data.msg
+                                title: 'Sign in Failed',
+                                message: 'The error is ' + res.data.msg
                             });
                         }
                         // 然后弹出登录成功的消息提示
@@ -107,8 +107,8 @@
                         that.loading = false;
                         that.disableButton = false;
                         that.$notify.error({
-                            title: '登录失败',
-                            message: '服务器存在错误，请稍后再试'
+                            title: 'Sign in Failed',
+                            message: 'The server have some error,Please wait a min.'
                         });
 
 
@@ -128,8 +128,8 @@
                 }*/
                 if(this.ruleForm.username == null || this.ruleForm.username === ""){
                     this.$notify.warning({
-                        title: '手机号为空',
-                        message: '请您填写手机号！'
+                        title: 'The Phone Num is empty',
+                        message: 'Please input your phone num.'
                     });
                     return false;
                 }else{
