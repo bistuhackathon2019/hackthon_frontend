@@ -4,7 +4,7 @@
             <div class="login-input-group">
                 <el-form :model="ruleForm" :rules="rules">
                     <el-form-item prop="username">
-                        <el-input v-model="ruleForm.username" v-on:focus="openEys" v-on:change="checkUser" placeholder="Phone Num" class="login-input-box"></el-input>
+                        <el-input type="number" v-model="ruleForm.username" v-on:focus="openEys" v-on:change="checkUser" placeholder="Phone Num" class="login-input-box" ></el-input>
                     </el-form-item>
 
                     <el-form-item prop="password">
