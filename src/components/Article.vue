@@ -108,7 +108,17 @@
         name: "Home",
         data(){
             return {
-
+                article: [],
+                comment: [],
+                emoji: [{'src':'http://cdn01-app.smartgslb.com/1.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/2.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/3.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/4.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/5.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/6.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/7.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/8.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/9.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/10.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/11.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/12.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/13.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/14.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/15.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/16.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/17.png', 'selected': 'emoji'}]
 
             }
         },
@@ -130,6 +140,9 @@
                         message: '取消输入'
                     });
                 });
+            },
+            getArticle: function(){
+                this.axios.get('')
             }
         }
     }

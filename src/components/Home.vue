@@ -1,97 +1,43 @@
 <template>
     <div class="container">
         <el-card class="box-card">
-            <el-row>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[0]" :fit="fit"></el-image>
-                </el-col>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[1]" :fit="fit"></el-image>
-                </el-col>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[2]" :fit="fit"></el-image>
-                </el-col>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[3]" :fit="fit"></el-image>
-                </el-col>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[4]" :fit="fit"></el-image>
-                </el-col>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[5]" :fit="fit"></el-image>
-                </el-col>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[6]" :fit="fit"></el-image>
-                </el-col>
-                <el-col :span="3">
-                    <el-image class="emoji" :src="emoji[8]" :fit="fit"></el-image>
-                </el-col>
-            </el-row>
-            <el-collapse accordion style="width: 100%;margin-top:10px;">
-                <el-collapse-item style="width: 100%;">
-                    <div slot="title" style="margin:0 auto;">
-                        更多表情
-                    </div>
-                    <div>
-                        <el-row>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[7]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[9]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[11]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[12]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[13]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[14]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[15]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[16]" :fit="fit"></el-image>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-image class="emoji" :src="emoji[17]" :fit="fit"></el-image>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-collapse-item>
-            </el-collapse>
+                <el-row>
+                    <el-col :span="3" v-for="(item,index) in emoji" v-bind:key="index">
+                    <span @click="changeMood(index)">
+                        <el-image :class="item.selected" :src="item.src" :fit="fit"></el-image>
+                    </span>
+                    </el-col>
+                </el-row>
+
         </el-card>
         <div class="container-box">
-            <el-row>
-                <el-col :span="3" class="avatar-box">
-                    <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="avatar"/>
-                    <p class="time"> 1天前</p>
-                </el-col>
-                <el-col :span="21">
-                    <div class="content-box">
-                        <p class="content">
-                            央广网北京5月17日消息（记者佟亚涛）据经济之声《天下财经》报道，
-                            商务部昨天（16日）举行新闻发布会，新闻发言人高峰说，美方霸凌主义、
-                        </p>
-                    </div>
+            <el-row v-for="(item, index) in listData" v-bind:key="index" class="cards">
+                    <el-col :span="3" class="avatar-box">
+                        <img :src="item.mood" class="avatar"/>
+                        <p class="time"> 1天前</p>
+                    </el-col>
 
-                </el-col>
+                    <el-col :span="21">
+                        <div class="content-box">
+                            <p class="content">
+                                {{item.content}}
+                            </p>
+                        </div>
+
+                    </el-col>
+                    <el-button style="position: absolute; bottom:20px;right:20px;" @click="goTo(item.postId)" type="primary">评论</el-button>
+
             </el-row>
 
-            <el-dialog title="发布帖子" :visible.sync="postBoxStatus" width="80%" :before-close="postBoxClose">
+            <el-dialog title="发布帖子" :visible.sync="postBoxStatus" width="80%" :before-close="postBoxCancle">
                 <el-form :model="ruleForm" :rules="rules">
                     <el-form-item label="文章内容" prop="content">
                         <el-input type="textarea" v-model="ruleForm.content" autocomplete="off" :autosize="{ minRows: 8, maxRows: 10}"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="postBoxClose">取 消</el-button>
-                <el-button type="primary" @click="postBoxStatus = false">确 定</el-button>
+                <el-button @click="postBoxCancle">取 消</el-button>
+                <el-button type="primary" @click="postArticle">确 定</el-button>
             </span>
             </el-dialog>
             <div class="post-button-box">
@@ -102,7 +48,8 @@
             <el-pagination
                     background
                     layout="prev, pager, next"
-                    :total="1000" class="page-button">
+                    :total="total" class="page-button"
+                    @current-change="getList">
             </el-pagination>
         </div>
     </div>
@@ -116,6 +63,10 @@
         data(){
             return{
                 postBoxStatus: false,
+                selected:[],
+                page:0,
+                total:0,
+                listData:[],
                 ruleForm:{
                     content: ''
                 },
@@ -125,17 +76,21 @@
                         { min: 8, max: 2000, message: '至少需要8个字，最多不超过2000个字', trigger: 'blur' }
                     ]
                 },
-                emoji: ['http://cdn01-app.smartgslb.com/1.png','http://cdn01-app.smartgslb.com/2.png','http://cdn01-app.smartgslb.com/3.png',
-                'http://cdn01-app.smartgslb.com/4.png','http://cdn01-app.smartgslb.com/5.png' ,'http://cdn01-app.smartgslb.com/6.png' ,
-                'http://cdn01-app.smartgslb.com/7.png','http://cdn01-app.smartgslb.com/8.png','http://cdn01-app.smartgslb.com/9.png',
-                'http://cdn01-app.smartgslb.com/10.png', 'http://cdn01-app.smartgslb.com/11.png' ,'http://cdn01-app.smartgslb.com/12.png',
-                'http://cdn01-app.smartgslb.com/13.png', 'http://cdn01-app.smartgslb.com/14.png', 'http://cdn01-app.smartgslb.com/15.png',
-                'http://cdn01-app.smartgslb.com/16.png', 'http://cdn01-app.smartgslb.com/17.png' ,'http://cdn01-app.smartgslb.com/18.png']
+                fit: 'fit',
+                emoji: [{'src':'http://cdn01-app.smartgslb.com/1.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/2.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/3.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/4.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/5.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/6.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/7.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/8.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/9.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/10.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/11.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/12.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/13.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/14.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/15.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/16.png', 'selected': 'emoji'},
+                    {'src':'http://cdn01-app.smartgslb.com/17.png', 'selected': 'emoji'}]
 
             }
         },
         methods:{
-            postBoxClose: function(){
+            postBoxCancle: function(){
                 this.postBoxStatus = false;
                 this.$message({
                     message: '您已经取消了发帖',
@@ -145,6 +100,116 @@
             openPostBox: function(){
                 this.postBoxStatus = true;
             },
+            changeMood: function(mood){
+                this.reSetEmoji();
+                this.emoji[mood].selected = "emoji-selected";
+                this.$cookies.set('mood',mood,24*60*60*1000);
+                const that = this;
+                this.axios.get("http://39.105.132.146:8080/user/update?id=" + this.$cookies.get("userid") + "&phone=" + this.$cookies.get("username") +
+                    "&mood=" + (mood + 1) + "&sessionKey=" + this.$cookies.get("sessionKey")
+                ).then(function(){
+                    that.$notify.success({
+                        title: '心情修改成功',
+                        message: "^_^"
+                    });
+                }).catch(function(error){
+                    window.console.log(error)
+                })
+            },
+            reSetEmoji: function(){
+              this.emoji = [{'src':'http://cdn01-app.smartgslb.com/1.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/2.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/3.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/4.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/5.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/6.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/7.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/8.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/9.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/10.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/11.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/12.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/13.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/14.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/15.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/16.png', 'selected': 'emoji'},
+                  {'src':'http://cdn01-app.smartgslb.com/17.png', 'selected': 'emoji'}];
+            },
+            getUser: function(){
+                const username = this.$cookies.get('username');
+                const sessionKey = this.$cookies.get('sessionKey');
+                const that = this;
+                if(username === undefined || username == "" || sessionKey === undefined || sessionKey == ""){
+                    that.login_status = true;
+                    that.user_status = false;
+
+                }else{
+                    that.username = username;
+
+                    that.getUserInfo(that.$cookies.get('userid'));
+                }
+            },
+            getUserInfo: function(userid){
+                window.console.log(userid);
+                const that = this;
+                this.axios.get('http://39.105.132.146:8080/user/find/' + userid).then(function(res){
+                    if(res.data.mood == null){
+                        window.console.log(res.data);
+                        that.emoji[0].selected = "emoji-selected";
+                        that.$cookies.set('mood',0,24*60*60*1000);
+                    }else{
+                        let moodindex = res.data.mood - 1;
+                        that.emoji[moodindex].selected = "emoji-selected";
+                        that.$cookies.set('mood',moodindex,24*60*60*1000);
+                    }
+
+                }).catch(function(error){
+                    window.console.log(error)
+                })
+            },
+            postArticle: function(){
+                window.console.log(this.$cookies.get('userid') + "###" + this.$cookies.get('mood'));
+                const that = this;
+                this.axios.get('http://39.105.132.146:8080/post/add', {
+                    params: {
+                        userId: this.$cookies.get('userid'),
+                        mood: this.$cookies.get('mood'),
+                        content: this.ruleForm.content,
+                    }
+
+                }).then(function (res) {
+                    window.console.log(res);
+                    that.postBoxStatus = false;
+                    that.$notify.success({
+                        message: '即将重新加载您的数据！',
+                        title: '发帖成功'
+                    });
+                    that.getList(that.page)
+
+                })
+            },
+            getList: function(page){
+                const that = this;
+                this.page = page - 1;
+                this.axios.get('http://39.105.132.146:8080/post/find', {
+                    params: {
+                        page: page - 1,
+                        size: 10
+                    }
+                }).then(function(res){
+                    window.console.log(res);
+                    that.listData = res.data.content;
+                    that.total = res.data.totalElements;
+                    let list = that.listData;
+                    const ther = that;
+                    for(let i=0;i<list.length;i++){
+                        window.console.log(ther.listData[i].mood);
+                        ther.listData[i].mood = "http://cdn01-app.smartgslb.com/" + (Number(ther.listData[i].mood) + 1) + ".png"
+                    }
+                    window.console.log(that.listData)
+
+                })
+
+            },
+            goTo: function(postId){
+                this.$router.push({ path:'/Article?id='+postId})
+            }
+        },
+        created() {
+            this.getUser();
+            this.getList(0);
         }
     }
 </script>
@@ -160,6 +225,8 @@
         width: 90%;
         margin: 0 auto 50px;
         text-align: center;
+        height:129px;
+
     }
     .avatar-box{
         text-align: center;
@@ -209,9 +276,16 @@
         border: 2px solid transparent;
     }
     .emoji:hover{
+        width: 100px;
+        height: 100px;
         border: 2px solid #DCDFE6;
     }
     .emoji-selected{
+        width: 100px;
+        height: 100px;
         border: 2px solid #409EFF;
+    }
+    .cards{
+        border-bottom: 1px solid #E4E7ED;
     }
 </style>

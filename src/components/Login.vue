@@ -88,6 +88,7 @@
                             that.$cookies.set('userid',res.data.user.id,24*60*60*1000);
                             that.$cookies.set('sessionKey',res.data.user.sessionKey,24*60*60*1000);
                             that.$router.push({ path:'/'})
+                            window.console.log(that.$cookies.get('userid'))
 
                         }else{
                             that.loading = false;
