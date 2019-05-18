@@ -30,6 +30,9 @@
                                     <p class="comment-font">我觉得这个评论非常有意思，因此我很喜欢啊！</p>
                                 </el-col>
                             </el-row>
+                            <div class="comment-button">
+                                <el-link :underline="false">回复</el-link>
+                            </div>
                         </el-card>
                     </el-timeline-item>
                     <el-timeline-item timestamp="#2 2018/4/3" placement="top" color="#0bbd87">
@@ -102,7 +105,33 @@
 
 <script>
     export default {
-        name: "Home"
+        name: "Home",
+        data(){
+            return {
+
+
+            }
+        },
+        methods: {
+            openReplyBox: function(){
+                this.$prompt('请输入邮箱', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                    inputErrorMessage: '邮箱格式不正确'
+                }).then(({ value }) => {
+                    this.$message({
+                        type: 'success',
+                        message: '你的邮箱是: ' + value
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            }
+        }
     }
 </script>
 
@@ -132,6 +161,7 @@
         width: 90%;
         margin: 0 auto;
         padding-bottom:10px;
+        color: #303133;
     }
     .content-font{
         font-size: 30px;
@@ -140,6 +170,7 @@
         position: relative;
         top: -10px;
         text-align: center;
+        color: #606266;
     }
     .comment-box{
         position: relative;
@@ -163,8 +194,14 @@
     }
     .comment-font{
         font-size: 20px;
+        color: #303133;
     }
     .comment-item{
         margin-bottom: 40px;
+    }
+    .comment-button{
+        float: right;
+        margin-top:10px;
+        margin-bottom:10px;
     }
 </style>

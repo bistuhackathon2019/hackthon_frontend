@@ -5,14 +5,14 @@
 
         <el-menu default-active="1" class="el-menu-diy" mode="horizontal">
           <el-menu-item index="0"><img src="../public/logo.png" style="height:50px;display: inline;" /></el-menu-item>
-          <!--<el-menu-item index="1" class="el-menu-item-float">登录 | 注册</el-menu-item>-->
-          <el-submenu index="2" class="el-menu-item-float">
-            <template slot="title"><img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="avatar"/> 帕尼</template>
+          <el-menu-item index="1" class="el-menu-item-float" v-if="login_status">登录 | 注册</el-menu-item>
+          <el-submenu index="2" class="el-menu-item-float" v-if="user_status">
+            <template slot="title"><img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="avatar"/> {{username}}</template>
             <el-menu-item index="2-1">个人信息</el-menu-item>
             <el-menu-item index="2-2">设置</el-menu-item>
             <el-menu-item index="2-3">退出登录</el-menu-item>
           </el-submenu>
-          <el-menu-item index="3" class="el-menu-item-float">消息中心</el-menu-item>
+          <!--<el-menu-item index="3" class="el-menu-item-float"></el-menu-item>-->
         </el-menu>
 
       </el-header>
@@ -27,7 +27,42 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data(){
+    return{
+      login_status: 'hidden',
+      user_status:'hidden',
+      username: '',
+    }
+  },
+  created() {
+    this.getUser();
+  },
+  methods:{
+    getUser: function(){
+      const username = this.$cookies.get('userid');
+      const sessionKey = this.$cookies.get('sessionKey');
+      const that = this;
+      if(username === undefined || username == "" || sessionKey === undefined || sessionKey == ""){
+        that.login_status = true;
+        that.user_status = false;
+
+      }else{
+        that.login_status = false;
+        that.user_status = true;
+        that.username = username;
+        that.getUserInfo(that.username)
+      }
+    },
+    getUserInfo: function(username){
+      window.console.log(username);
+      this.axios.get('http://39.105.132.146:8080/user/' + username).then(function(res){
+        window.console.log(res)
+      }).catch(function(error){
+        window.console.log(error)
+      })
+    }
+  }
 }
 </script>
 

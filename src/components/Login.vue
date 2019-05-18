@@ -4,13 +4,13 @@
             <div class="login-input-group">
                 <el-form :model="ruleForm" :rules="rules">
                     <el-form-item prop="username">
-                        <el-input v-model="ruleForm.username" v-on:focus="openEys" placeholder="手机号" class="login-input-box"></el-input>
+                        <el-input v-model="ruleForm.username" v-on:focus="openEys" v-on:change="checkUser" placeholder="手机号" class="login-input-box"></el-input>
                     </el-form-item>
                     <!--
                     <el-form-item prop="password">
                         <el-input type="password" v-model="ruleForm.password" v-on:focus="closeEys" v-on:blur="openEys" placeholder="密码" class="login-input-box" show-password></el-input>
                     </el-form-item>-->
-                    <el-button type="primary" class="login-button" @click="signOn" :loading="disableButton">登录 | 注册</el-button>
+                    <el-button type="primary" class="login-button" @click="signOn" :loading="disableButton">{{buttonInfo}}</el-button>
                 </el-form>
 
 
@@ -35,45 +35,70 @@
                 rules:{
                     username : [
                         { required: true, message: '请输入用户名或邮箱', trigger: 'blur' },
-                        { min: 4, max: 22, message: '长度在 4 到 22 个字符', trigger: 'blur' }
+                        { min: 3, max: 22, message: '长度在 11 到 22 个字符', trigger: 'blur' }
                     ],
                     password : [
                         { required: true, message: '请输入密码', trigger: 'blur' },
                         { min: 8, max: 22, message: '长度在 8 到 22 个字符', trigger: 'blur' }
                     ]
-                }
+                },
+                buttonInfo: '登录 | 注册'
             }
         },
         methods:{
             closeEys: function(){
                 document.getElementById('login-box').style.backgroundImage = "url(" + require('../assets/login-before.png') + ")";
-                window.console.log("jajaj")
             },
             openEys: function(){
                 document.getElementById('login-box').style.backgroundImage = "url(" + require('../assets/login-after.png') + ")";
+            },
+            checkUser: function(){
+                const that = this;
+                if(this.ruleForm.username != null || this.ruleForm.username != ""){
+                    this.axios.get('http://39.105.132.146:8080/user/check/' + this.ruleForm.username)
+                        .then(function(res){
+                            if(res.data.isExist === 'false'){
+                                that.buttonInfo = '注册';
+                            }else{
+                                that.buttonInfo = '登录';
+                                that.$message(' ^_^ 主人欢迎回来～');
+                            }
+                        })
+                }
+
             },
             postLogin: function(){
                 //首先进入加载模式
                 this.loading = true;
                 this.disableButton = true;
                 const that = this;
-
                 //发送登录请求
-                this.axios.post('url', {
-                    'username': this.ruleForm.username ,
-                    //'password': this.ruleForm.password
-                })
+                this.axios.get('http://39.105.132.146:8080/login?phone=' + this.ruleForm.username)
                     .then(function(res){
                         window.console.log(res);
-                        // 首先取消登录按钮的锁定
-                        that.loading = false;
-                        that.disableButton = false;
+
+                        if(res.data.loginState === "true"){
+                            that.$notify({
+                                title: '登录成功',
+                                message: '即将在3秒内为您跳转到上次页面',
+                                type: 'success'
+                            });
+                            // 这里存在问题
+                            that.$cookies.set('username',that.ruleForm.username,24*60*60*1000);
+                            that.$cookies.set('userid',res.data.user.id,24*60*60*1000);
+                            that.$cookies.set('sessionKey',res.data.user.sessionKey,24*60*60*1000);
+                            that.$router.push({ path:'/'})
+
+                        }else{
+                            that.loading = false;
+                            that.disableButton = true;
+                            that.$notify.error({
+                                title: '登录失败',
+                                message: '错误为' + res.data.msg
+                            });
+                        }
                         // 然后弹出登录成功的消息提示
-                        that.$notify({
-                            title: '登录成功',
-                            message: '即将在3秒内为您跳转到上次页面',
-                            type: 'success'
-                        });
+
 
                     })
                     .catch(function(error){
