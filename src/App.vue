@@ -5,8 +5,10 @@
 
         <el-menu default-active="1" class="el-menu-diy" mode="horizontal">
           <el-menu-item index="0"><img src="../public/logo.png" style="height:50px;display: inline;" /></el-menu-item>
-          <el-menu-item index="1" class="el-menu-item-float" v-if="login_status">Sign in | Sign up</el-menu-item>
+
           <el-menu-item index="2" class="el-menu-item-float" v-if="user_status">{{username}}</el-menu-item>
+          <el-menu-item index="1" class="el-menu-item-float" v-if="login_status">哈哈哈</el-menu-item>
+          <el-menu-item index="1" class="el-menu-item-float" v-if="login_status">哈哈哈</el-menu-item>
           <!--<el-menu-item index="3" class="el-menu-item-float"></el-menu-item>-->
         </el-menu>
 

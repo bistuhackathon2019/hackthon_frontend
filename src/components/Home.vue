@@ -10,7 +10,7 @@
                 </el-row>
 
         </el-card>
-        <div class="container-box">
+        <div class="container-box" v-loading="loading">
             <el-row v-for="(item, index) in listData" v-bind:key="index" class="cards">
                     <el-col :xl="3" :lg="3" :md="3" :sm="12" :xs="14" class="avatar-box">
                         <img :src="item.mood" class="avatar"/>
@@ -66,6 +66,7 @@
                 selected:[],
                 page:0,
                 total:0,
+                loading: true,
                 listData:[],
                 ruleForm:{
                     content: ''
@@ -198,7 +199,8 @@
                         window.console.log(ther.listData[i].mood);
                         ther.listData[i].mood = "http://cdn01-app.smartgslb.com/" + (Number(ther.listData[i].mood) + 1) + ".png"
                     }
-                    window.console.log(that.listData)
+                    window.console.log(that.listData);
+                    that.loading = false;
 
                 })
 

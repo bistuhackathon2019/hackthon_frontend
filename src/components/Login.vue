@@ -87,7 +87,7 @@
                             that.$cookies.set('username',that.ruleForm.username,24*60*60*1000);
                             that.$cookies.set('userid',res.data.user.id,24*60*60*1000);
                             that.$cookies.set('sessionKey',res.data.user.sessionKey,24*60*60*1000);
-                            that.$router.push({ path:'/'})
+                            that.$router.push({ path:'/home'})
                             window.console.log(that.$cookies.get('userid'))
 
                         }else{

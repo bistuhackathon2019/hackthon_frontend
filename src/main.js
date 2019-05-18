@@ -22,8 +22,8 @@ Vue.use(VueCookies)
 
 const routers = new VueRouter({
   routes: [
-    { path: '/', component: Home},
-    { path: '/login', component: Login},
+    { path: '/', component: Login},
+    { path: '/home', component: Home},
     { path: '/article', component: Article},
   ]
 });
