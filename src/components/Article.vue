@@ -2,18 +2,14 @@
     <div class="container">
         <div class="post-container">
             <div class="post-avatar-box">
-                <img src="https://avatars2.githubusercontent.com/u/17066433?s=460&v=4" class="post-avatar"/>
+                <img :src="emoji[article.mood-1].src" class="post-avatar"/>
             </div>
             <div class="post-time">
-                <p>2019年5月18日 10:22</p>
+                <p>{{article.sendTime}}</p>
             </div>
             <div class="content">
                 <p class="content-font">
-                    央广网北京5月17日消息（记者佟亚涛）据经济之声《天下财经》报道，
-                    商务部昨天（16日）举行新闻发布会，新闻发言人高峰说，美方霸凌主义、
-                    极限施压的做法导致中美经贸磋商严重受挫，中方将不得不采取相应反制措施。
-                    加征关税对我国经济的影响完全可控。
-                    不断加征关税无益于经贸问题解决
+                    {{article.content}}
                 </p>
             </div>
         </div>
@@ -108,7 +104,7 @@
         name: "Home",
         data(){
             return {
-                article: [],
+                article: null,
                 comment: [],
                 emoji: [{'src':'http://cdn01-app.smartgslb.com/1.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/2.png', 'selected': 'emoji'},
                     {'src':'http://cdn01-app.smartgslb.com/3.png', 'selected': 'emoji'},{'src':'http://cdn01-app.smartgslb.com/4.png', 'selected': 'emoji'},
@@ -141,9 +137,17 @@
                     });
                 });
             },
-            getArticle: function(){
-                this.axios.get('')
+            getArticle: function(id){
+                const that = this;
+                this.axios.get('http://39.105.132.146:8080/post/find/' + id).then(function(res){
+                    that.article = res.data;
+                    window.console.log(res)
+                })
             }
+        },
+        created: function(){
+            window.console.log(this.$cookies.get('nowartid'));
+            this.getArticle(this.$cookies.get('nowartid'));
         }
     }
 </script>

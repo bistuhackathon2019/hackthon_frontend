@@ -14,7 +14,7 @@
             <el-row v-for="(item, index) in listData" v-bind:key="index" class="cards">
                     <el-col :span="3" class="avatar-box">
                         <img :src="item.mood" class="avatar"/>
-                        <p class="time"> 1天前</p>
+                        <p class="time"> {{item.sendTime}}</p>
                     </el-col>
 
                     <el-col :span="21">
@@ -204,7 +204,12 @@
 
             },
             goTo: function(postId){
-                this.$router.push({ path:'/Article?id='+postId})
+                window.console.log(postId);
+                this.$cookies.set('nowartid',postId,60*60*1000);
+
+                this.$router.push(
+                    { path:'/article', params: { ids: postId }}
+                )
             }
         },
         created() {
